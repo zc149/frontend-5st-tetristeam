@@ -6,10 +6,24 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     <link rel="stylesheet" href="style.css">
+    <script type="module" src="app.js" defer></script>
 </head>
 
 <body>
-    <script src="app.js"></script>
+    <div class="container">
+        <div id="popup">
+            게임종료
+            <button id="restart" class="restart">다시시작</button>
+        </div>
+
+        <div class="board">
+            <table class="stage_container">
+                <tbody class="stage"></tbody>
+            </table>
+        </div>
+
+        <div id="next"></div>
+    </div>
 </body>
 
 </html>
