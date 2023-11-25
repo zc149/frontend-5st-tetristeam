@@ -61,6 +61,10 @@ const renderBlock = () => {
         const target = stage.childNodes[x].childNodes[y]
         target.classList.add(type, 'moving')
     })
+
+    blockInfo.n = n
+    blockInfo.m = m
+    blockInfo.direction = direction
 }
 
 // 다음에올 블럭 랜덤 세팅
@@ -102,7 +106,16 @@ const checkNextBlock = (where = '') => {
             isFinished = true
             finishBlock()
             return true
-        } else {
+
+        }
+        else if (y < 0 || y >= WIDTH) {
+            movingBlock = { ...blockInfo }
+            renderBlock()
+            console.log(blockInfo.n);
+            return true
+        }
+
+        else {
             const target = stage.childNodes[x]
                 ? stage.childNodes[x].childNodes[y]
                 : null
@@ -142,6 +155,66 @@ const moveBlock = (where, amount) => {
     checkNextBlock(where)
 }
 
+// 블럭 방향 변경
+const changeDirection = () => {
+    const direction = movingBlock.direction
+    if (direction === 3) {
+        movingBlock.direction = 0
+    }
+    else {
+        movingBlock.direction += 1
+    }
+    moveAndTurn();
+    renderBlock();
+}
+
+// 블럭 방향 변경시 위치 조정
+const moveAndTurn = () => {
+    if (movingBlock.m < 0) {
+        movingBlock.m = 0
+    }
+    else if (movingBlock.m + 3 >= WIDTH) {
+        if (movingBlock.type === 'I') {
+            movingBlock.m = 6
+        }
+        else {
+            movingBlock.m = 7
+        }
+    }
+}
+
+// 블록 드랍
+const dropBlock = () => {
+    clearInterval(downInterval)
+    downInterval = setInterval(() => {
+        moveBlock('n', 1)
+    }, 1)
+
+}
+
+document.addEventListener('keydown', (event) => {
+
+    switch (event.key) {
+        case 'ArrowRight':
+            moveBlock('m', 1)
+            break
+        case 'ArrowLeft':
+            moveBlock('m', -1)
+            break
+        case 'ArrowDown':
+            moveBlock('n', 1)
+            break
+        case 'ArrowUp':
+            changeDirection()
+            break
+        case ' ':
+            dropBlock()
+            break
+        default:
+            break
+    }
+})
+
 // 초기화
 const init = () => {
     makeNextBlock();
@@ -152,3 +225,6 @@ const init = () => {
 init()
 
 restartButton.addEventListener('click', restart)
+
+
+
